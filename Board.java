@@ -107,7 +107,13 @@ public class Board {
     }
 
     static boolean overlappingWords(Word w){
-
+        for(int i = 0 ; i < w.tiles.length ; i++){
+            if(w.tiles[i] != null)
+                break;
+            if(i+1 == 15)
+                return false;
+        }
+        return true;
     }
 
     public int tryPlaceWord(Word w){
