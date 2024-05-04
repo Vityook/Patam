@@ -37,5 +37,80 @@ public class Board {
         return instance;
     }
 
-    
+    public Tile[][] getTiles(){
+        return board.clone();
+    }
+
+    public boolean boardLegal(Word w){
+        boolean check;
+        int x;
+        check = outsideBoard(w);
+        if (!check)
+            return false;
+        check = tooLong(w);
+        if (!check)
+            return false;
+        x = firstToStart(w);
+        if (x == -1 )
+            return false;
+        if (x == 1)
+            return true;
+
+        check =  legalLetters(w);
+        if(!check) return false;
+
+        check = overlappingWords(w);
+    }
+
+    static boolean outsideBoard(Word w) {
+        return !(w.getRow() < 0 || w.getRow() > 15 || w.getCol() < 0 || w.getCol() > 15);
+    }
+
+    static boolean tooLong(Word w) {
+        return !(w.vertical && (w.tiles.length + w.getRow()) > 15) || (!(w.vertical) && (w.tiles.length + w.getCol() > 15));
+    }
+
+    int firstToStart(Word w) {
+        if(board[7][7] == null) {
+            for (int i = 0; i < w.tiles.length; i++) {
+                if (w.tiles[i] == null)
+                    return -1;
+            }
+            if (w.getCol() == 7 && w.getRow() == 7)
+                if (w.getRow() + w.tiles.length >= 7 && w.getRow() + w.tiles.length < 15 && w.getCol() <= 7 && w.getCol() + w.tiles.length >= 7 && w.getCol() + w.tiles.length < 15)
+                    return 1;
+                else return -1;
+
+            if (w.getCol() == 7) {
+                if (w.vertical)
+                    if (w.getRow() <= 7 && w.getRow() + w.tiles.length - 1 >= 7 && w.getRow() + w.tiles.length - 1 < 15)
+                        return 1;
+                    else return -1;
+            }
+
+            if (w.getRow() == 7) {
+                if (w.vertical)
+                    if (w.getCol() <= 7 && w.getCol() + w.tiles.length - 1 >= 7 && w.getCol() + w.tiles.length - 1 < 15)
+                        return 1;
+                    else return -1;
+            }
+        }
+
+        return 0;
+    }
+
+    static boolean legalLetters(Word w){
+        for(int i = 0 ; i < w.tiles.length; i++)
+            if(w.tiles[i].letter < 'A' || w.tiles[i].letter > 'Z' || w.tiles[i] == null)
+                return false;
+        return true;
+    }
+
+    static boolean overlappingWords(Word w){
+
+    }
+
+    public int tryPlaceWord(Word w){
+        return 1;
+    }
 }
