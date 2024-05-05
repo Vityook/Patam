@@ -60,6 +60,12 @@ public class Board {
         if(!check) return false;
 
         check = overlappingWords(w);
+        if(!check) return false;
+
+        check = directions(w);
+        if(!check) return false;
+
+        return true;
     }
 
     static boolean outsideBoard(Word w) {
@@ -114,6 +120,68 @@ public class Board {
                 return false;
         }
         return true;
+    }
+
+    public boolean directions(Word w) {
+        if (w.vertical) {
+            for (int i = 0; i < w.tiles.length; i++) {
+                if (board[w.row + i][w.col] == null)
+                    continue;
+                if (board[w.row + i][w.col] != null && w.tiles[i] != null)
+                    if (board[w.row + i][w.col].letter != w.tiles[i].letter)
+                        return false;
+            }
+        } else {
+            for (int i = 0; i < w.tiles.length; i++) {
+                if (board[w.row][w.col + i] == null)
+                    continue;
+                if (board[w.row][w.col + i] != null && w.tiles[i] != null)
+                    if (board[w.row][w.col + i].letter != w.tiles[i].letter)
+                        return false;
+            }
+        }
+
+        int flag = 0;
+        if(w.vertical){
+            if(w.col -1 > 0)
+                for (int i = 0; i < w.tiles.length; i++)
+                    if(board[w.row + i][w.col - 1] != null)
+                        flag = 1;
+
+            if(w.col + 1 < 15)
+                for (int i = 0; i < w.tiles.length; i++)
+                    if(board[w.row + i][w.col + 1] != null)
+                        flag = 1;
+
+            if(w.row - 1 > 0)
+                if(board[w.row - 1][w.col] != null)
+                    flag = 1;
+
+            if(w.row + w.tiles.length + 1 < 15)
+                if(board[w.row + w.tiles.length + 1][w.col] != null)
+                    flag = 1;
+        }
+        else {
+            if(w.row -1 > 0)
+                for (int i = 0; i < w.tiles.length; i++)
+                    if(board[w.row - 1][w.col + i] != null)
+                        flag = 1;
+
+            if(w.row + 1 < 14)
+                for (int i = 0; i < w.tiles.length; i++)
+                    if(board[w.row + 1][w.col + i] != null)
+                        flag = 1;
+
+            if(w.col - 1 > 0)
+                if(board[w.row][w.col - 1] != null)
+                    flag = 1;
+
+            if(w.col + w.tiles.length + 1 < 14)
+                if(board[w.row][w.col + w.tiles.length + 1] != null)
+                    flag = 1;
+        }
+        if(flag == 1) return true;
+        else return false;
     }
 
     public int tryPlaceWord(Word w){
