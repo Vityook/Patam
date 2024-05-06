@@ -62,18 +62,30 @@ public class Board {
         check = overlappingWords(w);
         if(!check) return false;
 
-        check = directions(w);
-        if(!check) return false;
-
-        return true;
+        if(board[w.row][w.col] == null) {
+            return directions(w);
+        }
+        if(board[w.row][w.col] != null && w.tiles[0] == null) {
+            return directions(w);
+        }
+        if(board[w.row][w.col].letter == w.tiles[0].letter) {
+            return directions(w);
+        }
+        return false;
     }
 
     static boolean outsideBoard(Word w) {
-        return !(w.getRow() < 0 || w.getRow() > 15 || w.getCol() < 0 || w.getCol() > 15);
+        return !(w.getRow() < 0 || w.getRow() >= 15 || w.getCol() < 0 || w.getCol() >= 15);
     }
 
     static boolean tooLong(Word w) {
-        return !(w.vertical && (w.tiles.length + w.getRow()) > 15) || (!(w.vertical) && (w.tiles.length + w.getCol() > 15));
+        if(w.vertical)
+            if(w.tiles.length > 15 - (w.row))
+                return false;
+        if(!w.vertical)
+            if(w.tiles.length > 15 - (w.col))
+                return false;
+        return true;
     }
 
     int firstToStart(Word w) {
@@ -148,7 +160,7 @@ public class Board {
                     if(board[w.row + i][w.col - 1] != null)
                         flag = 1;
 
-            if(w.col + 1 < 15)
+            if(w.col + 1 < 14)
                 for (int i = 0; i < w.tiles.length; i++)
                     if(board[w.row + i][w.col + 1] != null)
                         flag = 1;
@@ -157,7 +169,7 @@ public class Board {
                 if(board[w.row - 1][w.col] != null)
                     flag = 1;
 
-            if(w.row + w.tiles.length + 1 < 15)
+            if(w.row + w.tiles.length + 1 < 14)
                 if(board[w.row + w.tiles.length + 1][w.col] != null)
                     flag = 1;
         }
