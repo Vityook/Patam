@@ -1,5 +1,6 @@
 package test;
 
+import java.util.ArrayList;
 
 public class Board {
     Tile[][] board;
@@ -94,21 +95,21 @@ public class Board {
                 if (w.tiles[i] == null)
                     return -1;
             }
-            if (w.getCol() == 7 && w.getRow() == 7)
-                if (w.getRow() + w.tiles.length >= 7 && w.getRow() + w.tiles.length < 15 && w.getCol() <= 7 && w.getCol() + w.tiles.length >= 7 && w.getCol() + w.tiles.length < 15)
+            if (w.col == 7 && w.row == 7)
+                if (w.row + w.tiles.length >= 7 && w.row + w.tiles.length < 15)
                     return 1;
-                else return -1;
 
-            if (w.getCol() == 7) {
+
+            if (w.col == 7) {
                 if (w.vertical)
-                    if (w.getRow() <= 7 && w.getRow() + w.tiles.length - 1 >= 7 && w.getRow() + w.tiles.length - 1 < 15)
+                    if (w.row <= 7 && w.row + w.tiles.length - 1 >= 7 && w.row + w.tiles.length - 1 < 15)
                         return 1;
                     else return -1;
             }
 
-            if (w.getRow() == 7) {
-                if (w.vertical)
-                    if (w.getCol() <= 7 && w.getCol() + w.tiles.length - 1 >= 7 && w.getCol() + w.tiles.length - 1 < 15)
+            if (w.row == 7) {
+                if (!w.vertical)
+                    if (w.col <= 7 && w.col + w.tiles.length - 1 >= 7 && w.col + w.tiles.length - 1 < 15)
                         return 1;
                     else return -1;
             }
@@ -194,6 +195,31 @@ public class Board {
         }
         if(flag == 1) return true;
         else return false;
+    }
+
+    boolean dictionaryLegal(Word w){ return true; }
+
+    public ArrayList<Word> getWords(Word w){
+        boolean check = false;
+
+        ArrayList<Word> array = new ArrayList();
+        array.set(0, w);
+        Tile[] tiles = new Tile[w.tiles.length];
+        if(!w.vertical){
+            for(int i = 0 ; i < w.tiles.length ; i++){
+                if(board[w.row - 1][w.col] != null){
+                    int j = 0;
+                    while(board[w.row - j][w.col] != null){
+                        j++;
+                    }
+                    int k = 0;
+                    assert tiles != null;
+                    tiles[k].score = board[w.row - j][w.col].score;
+                }
+
+            }
+        }
+        return array;
     }
 
     public int tryPlaceWord(Word w){
