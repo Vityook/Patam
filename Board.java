@@ -206,139 +206,130 @@ public class Board {
 
     ArrayList<Word> getWords(Word w) {
 
-        ArrayList<Word> al = new ArrayList<Word>();
-        al.add(w);//add the first new word to the list.
+        ArrayList<Word> array = new ArrayList<Word>();
+        array.add(w);
 
-        if (this.board[7][7] == null && isFirstWordIsLegal(w)) {
-            return al; //if the first word.
-        }
+        if(board[7][7] == null && isFirstWordIsLegal(w))
+            return array;
 
-        int row   = w.getRow();
-        int col   = w.getCol();
-        int start = 0;
-        int end   = 0;
+        int tempRow = w.row;
+        int tempCol = w.col;
+        int start =0;
+        int end = 0;
 
-        for (int i = 0; i < w.getTiles().length; i++) {
-
-            if (w.isVertical()) {
-                if (w.getTiles()[i] == null && this.board[row][col] != null) {
-                    row++;
-                    continue;
-                }
-                if (col != 14) {
-                    if (this.board[row][col + 1] != null) {
-                        col++;
-                        while (this.board[row][col] != null) {
-                            end++;
-                            col++;
-                        }
-                    }
-                    col = w.getCol();
-                }
-                if (col != 0) {
-                    if (this.board[row][col - 1] != null) {
-                        col--;
-                        while (this.board[row][col] != null) {
-                            start++;
-                            col--;
-                        }
-                    }
-                    col = w.getCol();
-                }
-                if (start != 0 && end != 0) {
-                    al.add(makeWord(row, w.getCol() - start, start + end + 1, false, w.getTiles()[i]));
-                }
-                if (start == 0 && end != 0) {
-                    al.add(makeWord(row, w.getCol(), end + 1, false, w.getTiles()[i]));
-                }
-                if (start != 0 && end == 0) {
-                    al.add(makeWord(row, w.getCol() - start, start + 1, false, w.getTiles()[i]));
-                }
-                row++;
-                col = w.getCol();
-
-            } else {//not vertical
-                if (w.getTiles()[i] == null && this.board[row][col] != null) {
-                    col++;
+        for(int i = 0 ; i < w.tiles.length; i++){
+            if(w.vertical){
+                if(w.tiles[i] == null && board[tempRow][tempCol] != null){
+                    tempRow++;
                     continue;
                 }
 
-                if (row != 14) {
-                    if (this.board[row + 1][col] != null) {
-                        row++;
-                        while (this.board[row][col] != null) {
-                            row++;
+                if (tempCol < 14) {
+                    if (this.board[tempRow][tempCol + 1] != null) {
+                        tempCol++;
+                        while (board[tempRow][tempCol] != null) {
+                            tempCol++;
                             end++;
                         }
                     }
-                    row = w.getRow();
+                    tempCol = w.col;
                 }
-                if (col != 0) {
-                    if (this.board[row - 1][col] != null) {
-                        row--;
-                        while (this.board[row][col] != null) {
-                            row--;
+
+
+                if (tempCol > 0) {
+                    if (this.board[tempRow][tempCol - 1] != null) {
+                        tempCol--;
+                        while (board[tempRow][tempCol] != null) {
+                            tempCol--;
                             start++;
                         }
                     }
-                    row = w.getRow();
+                    tempCol = w.col;
                 }
-                if (start != 0 && end != 0) {
-                    al.add(makeWord(w.getRow() - start, col, start + end + 1, true, w.getTiles()[i]));
+
+
+                if(start != 0 && end != 0)
+                    array.add(createWord(tempRow, w.col - start, start + end + 1, false, w.getTiles()[i]));
+                else if (start == 0 && end != 0)
+                    array.add(createWord(tempRow, w.col, end + 1, false, w.getTiles()[i]));
+                else if (start != 0 )
+                    array.add(createWord(tempRow, w.col - start, start + 1, false, w.getTiles()[i]));
+
+                tempCol = w.col;
+                tempRow++;
+            }
+            else {
+                if(w.tiles[i] == null && board[tempRow][tempCol] != null){
+                    tempCol++;
+                    continue;
                 }
-                if (start == 0 && end != 0) {
-                    al.add(makeWord(w.getRow(), col, end + 1, true, w.getTiles()[i]));
+                if (tempRow < 14) {
+                    if (this.board[tempRow + 1][tempCol] != null) {
+                        tempRow++;
+                        while (board[tempRow][tempCol] != null) {
+                            tempRow++;
+                            end++;
+                        }
+                    }
+                    tempRow = w.row;
                 }
-                if (start != 0 && end == 0) {
-                    al.add(makeWord(w.getRow() - start, col, start + 1, true, w.getTiles()[i]));
+
+
+                if (tempRow > 0) {
+                    if (this.board[tempRow - 1][tempCol] != null) {
+                        tempRow--;
+                        while (board[tempRow][tempCol] != null) {
+                            tempRow--;
+                            start++;
+                        }
+                    }
+                    tempRow = w.row;
                 }
-                col++;
-                row = w.getRow();
+
+
+                if(start != 0 && end != 0)
+                    array.add(createWord(w.row - start, tempCol, start + end + 1, true, w.getTiles()[i]));
+                else if (start == 0 && end != 0)
+                    array.add(createWord(w.row, tempCol, end + 1, true, w.getTiles()[i]));
+                else if (start != 0)
+                    array.add(createWord(w.row - start, tempCol, start + 1, true, w.getTiles()[i]));
+
+                tempCol++;
+                tempRow = w.row;
             }
             start = 0;
-            end   = 0;
+            end  = 0;
         }
 
-        return al;
+        return array;
     }
 
     public boolean isFirstWordIsLegal(Word w) {
-        if (this.board[7][7] == null)//the star is empty and check if the word has the 7,7 index.
-        {
-            int row = w.getRow();
-            int col = w.getCol();
-            for (int i = 0; i < w.getTiles().length; i++) {
-                if (col == 7 && row == 7) {
+        if(board[7][7] == null){
+            int tempRow = w.getRow();
+            int tempCol = w.getCol();
+
+            for(int i = 0 ; i < w.tiles.length ; i++){
+                if(tempCol == 7 && tempRow == 7)
                     return true;
-                }
-                if (w.isVertical())//אנכית
-                {
-                    row++;
-                } else //אופקית
-                {
-                    col++;
-                }
+                if(w.vertical) tempRow++;
+                else tempCol++;
             }
-            return false; //the star is empty and the word doesn't have the 7,7 index.
+            return false;
         }
-        return true; //the star isn't empty.
+        return true;
     }
 
-    public Word makeWord(int row, int col, int length, boolean vertical, Tile t) {
-        int    r    = row;
-        int    c    = col;
+    public Word createWord(int row, int col, int length, boolean vertical, Tile t) {
+        int tempRow = row;
+        int TempCol = col;
         Tile[] temp = new Tile[length];
-        for (int i = 0; i < length; i++) {
-            if (this.board[r][c] == null) {
+        for(int i = 0 ; i < length ; i++){
+            if(board[tempRow][TempCol] == null)
                 temp[i] = t;
-            } else {
-                temp[i] = this.board[r][c];
-            }
-            if (vertical) {
-                r++;
-            } else {
-                c++;
-            }
+            else temp[i] = board[tempRow][TempCol];
+            if(vertical) tempRow++;
+            else TempCol++;
         }
         return new Word(temp, row, col, vertical);
     }
@@ -403,42 +394,5 @@ public class Board {
         int score     = 0;
         int wordMult  = 1;
         int tileScore = 0;
-        for (int i = w.getRow(), j = w.getCol(), count = 0; count < w.getTiles().length; count++) {
-            if (w.getTiles()[count] == null) {
-                tileScore = this.board[i][j] != null ? this.board[i][j].score : 0;
-            } else {
-                tileScore = w.getTiles()[count].score;
-            }
-            switch (boardScore[i][j]) {
-                case noBonus:
-                case centerPoint:
-                    score += tileScore;
-                    break;
-                case doubleLetterBonus:
-                    score += 2 * tileScore;
-                    break;
-                case tripleLetterBonus:
-                    score += 3 * tileScore;
-                    break;
-                case doubleWordBonus:
-                    score += tileScore;
-                    wordMult *= 2;
-                    break;
-                case tripleWordBonus:
-                    score += tileScore;
-                    wordMult *= 3;
-                    break;
-                default:
-                    break;
-            }
-
-            if (w.isVertical()) {
-                i++;
-            } else {
-                j++;
-            }
-        }
-
-        return score * wordMult;
-    }
+        return 1;
 }
