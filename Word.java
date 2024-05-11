@@ -1,13 +1,16 @@
+//#####################################################################
+//#   Name: Victor Poliakov                                           #
+//#   ID: 206707259                                                   #
+//#####################################################################
+
 package test;
 
-
-import java.util.Arrays;
 import java.util.Objects;
 
 public class Word {
-	public Tile[] tiles;
-	public int row, col;
-	public boolean vertical;
+	private Tile[] tiles;
+	private int row, col;
+	private boolean vertical;
 
 	public Word(Tile[] tiles, int row, int col, boolean vertical){
 		this.tiles = tiles;
@@ -38,10 +41,5 @@ public class Word {
 		if (o == null || getClass() != o.getClass()) return false;
 		Word word = (Word) o;
 		return row == word.row && col == word.col && vertical == word.vertical && Objects.deepEquals(tiles, word.tiles);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(Arrays.hashCode(tiles), row, col, vertical);
 	}
 }

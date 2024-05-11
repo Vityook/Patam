@@ -1,7 +1,10 @@
+//#####################################################################
+//#   Name: Victor Poliakov                                           #
+//#   ID: 206707259                                                   #
+//#####################################################################
+
 package test;
 
-
-import java.io.ObjectInputStream;
 import java.util.Objects;
 import java.util.Random;
 

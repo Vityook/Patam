@@ -1,3 +1,8 @@
+//#####################################################################
+//#   Name: Victor Poliakov                                           #
+//#   ID: 206707259                                                   #
+//#####################################################################
+
 package test;
 
 import java.util.ArrayList;
@@ -6,7 +11,6 @@ public class Board {
     Tile[][] board;
 
     static boolean middleCheck ;
-    int [] letterScore = {1,3,3,2,1,4,2,4,1,8,5,1,3,1,1,3,10,1,1,1,1,4,4,8,4,10}; //ascii start at 65=A -> 90=Z
 
     final int noBonus = 0, doubleLetterBonus = 1, tripleLetterBonus = 2, doubleWordBonus = 3, tripleWordBonus = 4,
     centerPoint = 5;
@@ -67,13 +71,13 @@ public class Board {
         check = overlappingWords(w);
         if(!check) return false;
 
-        if(board[w.row][w.col] == null) {
+        if(board[w.getRow()][w.getCol()] == null) {
             return directions(w);
         }
-        if(board[w.row][w.col] != null && w.tiles[0] == null) {
+        if(board[w.getRow()][w.getCol()] != null && w.getTiles()[0] == null) {
             return directions(w);
         }
-        if(board[w.row][w.col].letter == w.tiles[0].letter) {
+        if(board[w.getRow()][w.getCol()].letter == w.getTiles()[0].letter) {
             return directions(w);
         }
         return false;
@@ -84,36 +88,35 @@ public class Board {
     }
 
     static boolean tooLong(Word w) {
-        if(w.vertical)
-            if(w.tiles.length > 15 - (w.row))
+        if(w.isVertical())
+            if(w.getTiles().length > 15 - (w.getRow()))
                 return false;
-        if(!w.vertical)
-            if(w.tiles.length > 15 - (w.col))
-                return false;
+        if(!w.isVertical())
+            return w.getTiles().length <= 15 - (w.getCol());
         return true;
     }
 
     int firstToStart(Word w) {
         if(board[7][7] == null) {
-            for (int i = 0; i < w.tiles.length; i++) {
-                if (w.tiles[i] == null)
+            for (int i = 0; i < w.getTiles().length; i++) {
+                if (w.getTiles()[i] == null)
                     return -1;
             }
-            if (w.col == 7 && w.row == 7)
-                if (w.row + w.tiles.length >= 7 && w.row + w.tiles.length < 15)
+            if (w.getCol() == 7 && w.getRow() == 7)
+                if (w.getRow() + w.getTiles().length >= 7 && w.getRow() + w.getTiles().length < 15)
                     return 1;
 
 
-            if (w.col == 7) {
-                if (w.vertical)
-                    if (w.row <= 7 && w.row + w.tiles.length - 1 >= 7 && w.row + w.tiles.length - 1 < 15)
+            if (w.getCol() == 7) {
+                if (w.isVertical())
+                    if (w.getRow() <= 7 && w.getRow() + w.getTiles().length - 1 >= 7 && w.getRow() + w.getTiles().length - 1 < 15)
                         return 1;
                     else return -1;
             }
 
-            if (w.row == 7) {
-                if (!w.vertical)
-                    if (w.col <= 7 && w.col + w.tiles.length - 1 >= 7 && w.col + w.tiles.length - 1 < 15)
+            if (w.getRow() == 7) {
+                if (!w.isVertical())
+                    if (w.getCol() <= 7 && w.getCol() + w.getTiles().length - 1 >= 7 && w.getCol() + w.getTiles().length - 1 < 15)
                         return 1;
                     else return -1;
             }
@@ -123,16 +126,16 @@ public class Board {
     }
 
     static boolean legalLetters(Word w){
-        for(int i = 0 ; i < w.tiles.length; i++)
+        for(int i = 0 ; i < w.getTiles().length; i++)
             if(w.getTiles()[i] != null)
-                if(w.tiles[i].letter < 'A' || w.tiles[i].letter > 'Z' || w.tiles[i] == null)
+                if(w.getTiles()[i].letter < 'A' || w.getTiles()[i].letter > 'Z' || w.getTiles()[i] == null)
                     return false;
         return true;
     }
 
     static boolean overlappingWords(Word w){
-        for(int i = 0 ; i < w.tiles.length ; i++){
-            if(w.tiles[i] != null)
+        for(int i = 0 ; i < w.getTiles().length ; i++){
+            if(w.getTiles()[i] != null)
                 break;
             if(i+1 == 15)
                 return false;
@@ -141,65 +144,64 @@ public class Board {
     }
 
     public boolean directions(Word w) {
-        if (w.vertical) {
-            for (int i = 0; i < w.tiles.length; i++) {
-                if (board[w.row + i][w.col] == null)
+        if (w.isVertical()) {
+            for (int i = 0; i < w.getTiles().length; i++) {
+                if (board[w.getRow() + i][w.getCol()] == null)
                     continue;
-                if (board[w.row + i][w.col] != null && w.tiles[i] != null)
-                    if (board[w.row + i][w.col].letter != w.tiles[i].letter)
+                if (board[w.getRow() + i][w.getCol()] != null && w.getTiles()[i] != null)
+                    if (board[w.getRow() + i][w.getCol()].letter != w.getTiles()[i].letter)
                         return false;
             }
         } else {
-            for (int i = 0; i < w.tiles.length; i++) {
-                if (board[w.row][w.col + i] == null)
+            for (int i = 0; i < w.getTiles().length; i++) {
+                if (board[w.getRow()][w.getCol() + i] == null)
                     continue;
-                if (board[w.row][w.col + i] != null && w.tiles[i] != null)
-                    if (board[w.row][w.col + i].letter != w.tiles[i].letter)
+                if (board[w.getRow()][w.getCol() + i] != null && w.getTiles()[i] != null)
+                    if (board[w.getRow()][w.getCol() + i].letter != w.getTiles()[i].letter)
                         return false;
             }
         }
 
         int flag = 0;
-        if(w.vertical){
-            if(w.col -1 > 0)
-                for (int i = 0; i < w.tiles.length; i++)
-                    if(board[w.row + i][w.col - 1] != null)
+        if(w.isVertical()){
+            if(w.getCol() -1 > 0)
+                for (int i = 0; i < w.getTiles().length; i++)
+                    if(board[w.getRow() + i][w.getCol() - 1] != null)
                         flag = 1;
 
-            if(w.col + 1 < 14)
-                for (int i = 0; i < w.tiles.length; i++)
-                    if(board[w.row + i][w.col + 1] != null)
+            if(w.getCol() + 1 < 14)
+                for (int i = 0; i < w.getTiles().length; i++)
+                    if(board[w.getRow() + i][w.getCol() + 1] != null)
                         flag = 1;
 
-            if(w.row - 1 > 0)
-                if(board[w.row - 1][w.col] != null)
+            if(w.getRow() - 1 > 0)
+                if(board[w.getRow() - 1][w.getCol()] != null)
                     flag = 1;
 
-            if(w.row + w.tiles.length + 1 < 14)
-                if(board[w.row + w.tiles.length + 1][w.col] != null)
+            if(w.getRow() + w.getTiles().length + 1 < 14)
+                if(board[w.getRow() + w.getTiles().length + 1][w.getCol()] != null)
                     flag = 1;
         }
         else {
-            if(w.row -1 > 0)
-                for (int i = 0; i < w.tiles.length; i++)
-                    if(board[w.row - 1][w.col + i] != null)
+            if(w.getRow() -1 > 0)
+                for (int i = 0; i < w.getTiles().length; i++)
+                    if(board[w.getRow() - 1][w.getCol() + i] != null)
                         flag = 1;
 
-            if(w.row + 1 < 14)
-                for (int i = 0; i < w.tiles.length; i++)
-                    if(board[w.row + 1][w.col + i] != null)
+            if(w.getRow() + 1 < 14)
+                for (int i = 0; i < w.getTiles().length; i++)
+                    if(board[w.getRow() + 1][w.getCol() + i] != null)
                         flag = 1;
 
-            if(w.col - 1 > 0)
-                if(board[w.row][w.col - 1] != null)
+            if(w.getCol() - 1 > 0)
+                if(board[w.getRow()][w.getCol() - 1] != null)
                     flag = 1;
 
-            if(w.col + w.tiles.length + 1 < 14)
-                if(board[w.row][w.col + w.tiles.length + 1] != null)
+            if(w.getCol() + w.getTiles().length + 1 < 14)
+                if(board[w.getRow()][w.getCol() + w.getTiles().length + 1] != null)
                     flag = 1;
         }
-        if(flag == 1) return true;
-        else return false;
+        return flag == 1;
     }
 
     boolean dictionaryLegal(Word w){ return true; }
@@ -212,14 +214,14 @@ public class Board {
         if(board[7][7] == null && isFirstWordIsLegal(w))
             return array;
 
-        int tempRow = w.row;
-        int tempCol = w.col;
+        int tempRow = w.getRow();
+        int tempCol = w.getCol();
         int start =0;
         int end = 0;
 
-        for(int i = 0 ; i < w.tiles.length; i++){
-            if(w.vertical){
-                if(w.tiles[i] == null && board[tempRow][tempCol] != null){
+        for(int i = 0 ; i < w.getTiles().length; i++){
+            if(w.isVertical()){
+                if(w.getTiles()[i] == null && board[tempRow][tempCol] != null){
                     tempRow++;
                     continue;
                 }
@@ -232,7 +234,7 @@ public class Board {
                             end++;
                         }
                     }
-                    tempCol = w.col;
+                    tempCol = w.getCol();
                 }
 
 
@@ -244,22 +246,22 @@ public class Board {
                             start++;
                         }
                     }
-                    tempCol = w.col;
+                    tempCol = w.getCol();
                 }
 
 
                 if(start != 0 && end != 0)
-                    array.add(createWord(tempRow, w.col - start, start + end + 1, false, w.getTiles()[i]));
+                    array.add(createWord(tempRow, w.getCol() - start, start + end + 1, false, w.getTiles()[i]));
                 else if (start == 0 && end != 0)
-                    array.add(createWord(tempRow, w.col, end + 1, false, w.getTiles()[i]));
+                    array.add(createWord(tempRow, w.getCol(), end + 1, false, w.getTiles()[i]));
                 else if (start != 0 )
-                    array.add(createWord(tempRow, w.col - start, start + 1, false, w.getTiles()[i]));
+                    array.add(createWord(tempRow, w.getCol() - start, start + 1, false, w.getTiles()[i]));
 
-                tempCol = w.col;
+                tempCol = w.getCol();
                 tempRow++;
             }
             else {
-                if(w.tiles[i] == null && board[tempRow][tempCol] != null){
+                if(w.getTiles()[i] == null && board[tempRow][tempCol] != null){
                     tempCol++;
                     continue;
                 }
@@ -271,7 +273,7 @@ public class Board {
                             end++;
                         }
                     }
-                    tempRow = w.row;
+                    tempRow = w.getRow();
                 }
 
 
@@ -283,19 +285,19 @@ public class Board {
                             start++;
                         }
                     }
-                    tempRow = w.row;
+                    tempRow = w.getRow();
                 }
 
 
                 if(start != 0 && end != 0)
-                    array.add(createWord(w.row - start, tempCol, start + end + 1, true, w.getTiles()[i]));
+                    array.add(createWord(w.getRow() - start, tempCol, start + end + 1, true, w.getTiles()[i]));
                 else if (start == 0 && end != 0)
-                    array.add(createWord(w.row, tempCol, end + 1, true, w.getTiles()[i]));
+                    array.add(createWord(w.getRow(), tempCol, end + 1, true, w.getTiles()[i]));
                 else if (start != 0)
-                    array.add(createWord(w.row - start, tempCol, start + 1, true, w.getTiles()[i]));
+                    array.add(createWord(w.getRow() - start, tempCol, start + 1, true, w.getTiles()[i]));
 
                 tempCol++;
-                tempRow = w.row;
+                tempRow = w.getRow();
             }
             start = 0;
             end  = 0;
@@ -309,10 +311,10 @@ public class Board {
             int tempRow = w.getRow();
             int tempCol = w.getCol();
 
-            for(int i = 0 ; i < w.tiles.length ; i++){
+            for(int i = 0 ; i < w.getTiles().length ; i++){
                 if(tempCol == 7 && tempRow == 7)
                     return true;
-                if(w.vertical) tempRow++;
+                if(w.isVertical()) tempRow++;
                 else tempCol++;
             }
             return false;
@@ -335,64 +337,82 @@ public class Board {
     }
 
 
-    /**
-     * helping method for tryPlaceWord, this method places a word on a given board
-     */
+
+
     private void placeWord(Tile[][] boardTiles, Word w) {
-        for (int row = w.getRow(), col = w.getCol(), count = 0; count < w.getTiles().length; count++) {
-            if (w.getTiles()[count] != null) {
-                boardTiles[row][col] = w.getTiles()[count];
-            }
+        for (int i = 0; i < w.getTiles().length; i++)
+            if (w.getTiles()[i] != null)
+                board[w.getRow() + (w.isVertical() ? i : 0)][w.getCol() + (w.isVertical() ? 0 : i)] = w.getTiles()[i];
 
-            if (w.isVertical()) {
-                row++;
-            } else {
-                col++;
-            }
-        }
-
-        if (boardTiles == board) //same address -> word is placed on board
-        {
+        if (boardTiles == board)
             numOfTilesPlaced += w.getTiles().length;
-        }
+
     }
 
-    /**
-     * places a word on the board if it follows all the rules
-     */
-    int tryPlaceWord(Word w) {
-        int score = 0, i = 0;
+
+    public int tryPlaceWord(Word w) {
+        int i = 0;
         if (boardLegal(w) && dictionaryLegal(w)) {
-            ArrayList<Word> newWords = getWords(w); //check all new words
-            for (Word word : newWords) {
-                if (!dictionaryLegal(word)) {
+            ArrayList<Word> newArray = getWords(w);
+
+            for (Word word : newArray)
+                if (!dictionaryLegal(word))
                     return 0;
-                }
-            }
-            if (numOfTilesPlaced == 0) //first word
-            {
-                placeWord(this.board, w);  //place word permanently
-                score += 2 * getScore(newWords.get(0));
+
+            int score = 0;
+            if (numOfTilesPlaced == 0) { // First word
+                placeWord(board, w);
+                score += 2 * getScore(newArray.get(0)); // Double score for first word
                 i++;
-            } else {
-                placeWord(this.board, w);  //place word permanently
-            }
-            for (; i < newWords.size(); i++) //calc score for all the new words created
-            {
-                score += getScore(newWords.get(i));
-            }
+            } else
+                placeWord(board, w);
+
+            for (; i < newArray.size() ; i++)
+                score += getScore(newArray.get(i));
+
             return score;
-        } else {
-            return 0;
+        }
+        else return 0;
+    }
+
+
+    public int getScore(Word w) {
+        int score = 0;
+        int wordMultiplier = 1;
+
+        for (int i = 0; i < w.getTiles().length; i++) {
+            Tile tile = w.getTiles()[i] != null ? w.getTiles()[i] : board[w.getRow() + (w.isVertical() ? i : 0)][w.getCol() + (w.isVertical() ? 0 : i)];
+            int tileScore = tile.score;
+
+            score += applyBonus(boardScore[w.getRow() + (w.isVertical() ? i : 0)][w.getCol() + (w.isVertical() ? 0 : i)], tileScore);
+            wordMultiplier *= getWordMultiplier(boardScore[w.getRow() + (w.isVertical() ? i : 0)][w.getCol() + (w.isVertical() ? 0 : i)]);
+        }
+
+        return score * wordMultiplier;
+    }
+
+    private int applyBonus(int bonus, int tileScore) {
+        switch (bonus) {
+            case noBonus:
+            case centerPoint:
+                return tileScore;
+            case doubleLetterBonus:
+                return tileScore * 2;
+            case tripleLetterBonus:
+                return tileScore * 3;
+            default:
+                return tileScore;
         }
     }
 
-    /**
-     * returns the score of a given word
-     */
-    int getScore(Word w) {
-        int score     = 0;
-        int wordMult  = 1;
-        int tileScore = 0;
-        return 1;
+    private int getWordMultiplier(int bonus) {
+        switch (bonus) {
+            case doubleWordBonus:
+                return 2;
+            case tripleWordBonus:
+                return 3;
+            default:
+                return 1;
+        }
+    }
 }
