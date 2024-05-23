@@ -8,7 +8,7 @@ package test;
 import java.util.*;
 
 public class LFU implements CacheReplacementPolicy {
-    private LinkedHashMap<String, Integer> map;
+    private final LinkedHashMap<String, Integer> map;
 
     public LFU(){
         map = new LinkedHashMap<String , Integer>();
@@ -38,9 +38,9 @@ public class LFU implements CacheReplacementPolicy {
                 lowest = (int)m.getValue();
         }
         while(it.hasNext()){
-            Map.Entry<String,Integer> anotherit = it.next();
-            if(anotherit.getValue() == lowest)
-                removeString = anotherit.getKey();
+            Map.Entry<String,Integer> anotherIt = it.next();
+            if(anotherIt.getValue() == lowest)
+                removeString = anotherIt.getKey();
         }
         return removeString;
     }

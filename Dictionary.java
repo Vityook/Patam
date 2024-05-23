@@ -50,7 +50,6 @@ public class Dictionary  {
     }
 
     public boolean challenge(String word) {
-        IOSearcher io = new IOSearcher();
         if (IOSearcher.search(word, copyFileNames)) {
             cacheExist.add(word);
             return true;

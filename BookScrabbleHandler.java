@@ -24,8 +24,8 @@ public class BookScrabbleHandler implements ClientHandler {
 
     @Override
     public void handleClient(InputStream inFromClient, OutputStream outToClient) {
-        Scanner scanner = new Scanner(inFromClient);
-        PrintWriter out = new PrintWriter(outToClient);
+        scanner = new Scanner(inFromClient);
+        out = new PrintWriter(outToClient);
         try {
             if (scanner.hasNextLine()) {
                 line = scanner.nextLine();
@@ -53,7 +53,7 @@ public class BookScrabbleHandler implements ClientHandler {
             out.println("false");
             out.flush();
         }
-        out.close();
+        close();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class BookScrabbleHandler implements ClientHandler {
         Pattern pattern = Pattern.compile("([^,]+|\".*?\")");
         Matcher matcher = pattern.matcher(line);
         while (matcher.find()) {
-            words.add(matcher.group(1).replace("\"", ""));  // Remove quotes if present
+            words.add(matcher.group(1).replace("\"", ""));
         }
         return words;
     }
