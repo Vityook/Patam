@@ -6,7 +6,7 @@
 package test;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
@@ -19,8 +19,6 @@ public class Dictionary  {
     String[] copyFileNames;
 
     public Dictionary(String... fileNames){
-        LRU = new LRU();
-        LFU = new LFU();
         cacheExist = new CacheManager(400, new LRU());
         cacheNotExist  = new CacheManager(100, new LFU());
         bf = new BloomFilter(256, "MD5", "SHA1");
@@ -30,11 +28,10 @@ public class Dictionary  {
                 Scanner scan = new Scanner(new File(Paths.get(fileNames[i]).toUri()));
                 while(scan.hasNext())
                     bf.add(scan.next());
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
-
     }
 
     public boolean query(String word) {
@@ -53,13 +50,14 @@ public class Dictionary  {
     }
 
     public boolean challenge(String word) {
-        if(IOSearcher.search(word, copyFileNames)){
+        IOSearcher io = new IOSearcher();
+        if (IOSearcher.search(word, copyFileNames)) {
             cacheExist.add(word);
             return true;
-        }
-        else{
+        } else {
             cacheNotExist.add(word);
             return false;
         }
     }
+
 }

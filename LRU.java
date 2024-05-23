@@ -5,7 +5,6 @@
 
 package test;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class LRU implements CacheReplacementPolicy {
